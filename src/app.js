@@ -8,21 +8,19 @@ const controls = document.getElementById('controls');
 let filePath = null;
 let crop = null;
 
-// Load Video
 fileInput.addEventListener('change', (e) => {
   const file = e.target.files[0];
-  filePath = file.path;
+  filePath = file.path;   // IMPORTANT for Electron
   video.src = URL.createObjectURL(file);
 });
 
-// AUTO DETECT
 autoBtn.addEventListener('click', async () => {
+  if (!filePath) return alert("Select video first");
   crop = await window.api.detectCrop(filePath);
   renderControls();
   renderOutput();
 });
 
-// MANUAL CONTROLS
 function renderControls() {
   if (!crop) return;
 
@@ -44,17 +42,13 @@ function renderControls() {
   });
 }
 
-// EXPORT
 exportBtn.addEventListener('click', () => {
   if (!crop) return;
 
   const ffmpeg = `crop=${crop.width}:${crop.height}:${crop.x}:${crop.y}`;
-  const json = JSON.stringify(crop, null, 2);
-
-  alert("FFmpeg:\n" + ffmpeg + "\n\nJSON:\n" + json);
+  alert(ffmpeg);
 });
 
-// DISPLAY OUTPUT
 function renderOutput() {
   output.textContent = JSON.stringify(crop, null, 2);
 }
