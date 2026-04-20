@@ -1,6 +1,3 @@
-const { contextBridge, ipcRenderer } = require('electron');
-
-contextBridge.exposeInMainWorld('api', {
-  openFile: () => ipcRenderer.invoke('open-file'),
-  detectCrop: (filePath) => ipcRenderer.invoke('detect-crop', filePath)
-});
+getPresets: () => ipcRenderer.invoke('get-presets'),
+savePreset: (name, crop) => ipcRenderer.invoke('save-preset', name, crop),
+deletePreset: (name) => ipcRenderer.invoke('delete-preset', name)
