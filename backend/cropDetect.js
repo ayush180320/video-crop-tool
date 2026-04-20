@@ -8,7 +8,7 @@ function detectCrop(filePath) {
     let results = [];
 
     ffmpeg(filePath)
-      .outputOptions('-vf', 'cropdetect=24:2:0')
+      .outputOptions('-vf', 'cropdetect=limit=24:round=2:reset=0')
       .output('-f', 'null')
       .on('stderr', (line) => {
         const match = line.match(/crop=\d+:\d+:\d+:\d+/);
@@ -22,7 +22,6 @@ function detectCrop(filePath) {
   });
 }
 
-// SMART DETECTION (median)
 function aggregate(crops) {
   if (!crops.length) return null;
 
