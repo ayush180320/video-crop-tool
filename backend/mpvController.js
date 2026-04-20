@@ -1,5 +1,6 @@
 const { spawn } = require('child_process');
 const path = require('path');
+const fs = require('fs');
 const net = require('net');
 
 let mpvProcess = null;
@@ -7,8 +8,20 @@ let socket = null;
 
 const PIPE = '\\\\.\\pipe\\mpv-pipe';
 
+function getMPVPath() {
+  const devPath = path.join(__dirname, '..', 'resources', 'mpv', 'mpv.exe');
+  const prodPath = path.join(process.resourcesPath, 'mpv', 'mpv.exe');
+
+  if (fs.existsSync(prodPath)) return prodPath;
+  if (fs.existsSync(devPath)) return devPath;
+
+  throw new Error("mpv.exe not found in both dev and production paths");
+}
+
 function startMPV(filePath) {
-  const mpvPath = path.join(process.resourcesPath, 'mpv', 'mpv.exe');
+  const mpvPath = getMPVPath();
+
+  console.log("MPV PATH:", mpvPath);
 
   if (mpvProcess) mpvProcess.kill();
 
@@ -20,9 +33,15 @@ function startMPV(filePath) {
     `--input-ipc-server=${PIPE}`
   ]);
 
-  setTimeout(() => {
-    socket = net.createConnection(PIPE);
-  }, 1000);
+  mpvProcess.on('error', (err) => {
+    console.error("MPV ERROR:", err);
+  });
+
+  setTimeout(connectIPC, 1500);
+}
+
+function connectIPC() {
+  socket = net.createConnection(PIPE);
 }
 
 function send(cmd) {
