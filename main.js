@@ -30,11 +30,11 @@ ipcMain.handle('open-file', async () => {
   return res.canceled ? null : res.filePaths[0];
 });
 
-ipcMain.handle('play-video', (_, filePath) => startMPV(filePath));
-ipcMain.handle('detect-crop', (_, filePath) => detectCrop(filePath));
+ipcMain.handle('play-video', (_, f) => startMPV(f));
+ipcMain.handle('detect-crop', (_, f) => detectCrop(f));
 
 ipcMain.handle('get-presets', () => loadPresets());
-ipcMain.handle('save-preset', (_, name, crop) => savePreset(name, crop));
-ipcMain.handle('delete-preset', (_, name) => deletePreset(name));
+ipcMain.handle('save-preset', (_, n, c) => savePreset(n, c));
+ipcMain.handle('delete-preset', (_, n) => deletePreset(n));
 
 ipcMain.handle('generate-qc', (_, meta, crop) => generateQC(meta, crop));
