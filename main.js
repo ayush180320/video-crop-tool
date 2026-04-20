@@ -1,10 +1,12 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
+const { detectCrop } = require('./backend/cropDetect');
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 1400,
+    height: 900,
+    backgroundColor: "#1e1e1e",
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true
@@ -15,9 +17,15 @@ function createWindow() {
 }
 
 app.whenReady().then(createWindow);
-const { ipcMain } = require('electron');
-const { detectCrop } = require('./backend/cropDetect');
 
-ipcMain.handle('detect-crop', async (event, filePath) => {
+ipcMain.handle('open-file', async () => {
+  const res = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: [{ name: 'Video', extensions: ['mp4','mov','mkv'] }]
+  });
+  return res.canceled ? null : res.filePaths[0];
+});
+
+ipcMain.handle('detect-crop', async (_, filePath) => {
   return await detectCrop(filePath);
 });
