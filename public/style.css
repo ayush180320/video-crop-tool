@@ -3,3 +3,9 @@ body { background:#1e1e1e; color:white; font-family:sans-serif; }
 input, button { width:100%; margin-bottom:8px; }
 #progress { height:6px; background:#444; }
 #bar { height:100%; width:0%; background:#4caf50; }
+#preview {
+  width: 250px;
+  height: 150px;
+  border: 1px solid #555;
+  margin-top: 10px;
+}
