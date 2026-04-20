@@ -1,167 +1,118 @@
-/* GLOBAL RESET */
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
   background: #1e1e1e;
-  color: #ffffff;
-  font-family: "Segoe UI", Arial, sans-serif;
-  display: flex;
-  height: 100vh;
+  color: #fff;
+  font-family: "Segoe UI", sans-serif;
   overflow: hidden;
 }
 
-/* SIDEBAR */
-.sidebar {
-  width: 280px;
+/* MAIN LAYOUT */
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+/* PANELS */
+.panel {
+  padding: 10px;
   background: #252526;
-  padding: 15px;
-  border-right: 1px solid #333;
+  overflow: hidden;
+}
+
+.left {
+  width: 260px;
+}
+
+.right {
+  width: 260px;
+}
+
+.center {
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.sidebar h4 {
-  margin-top: 15px;
-  margin-bottom: 8px;
-  font-size: 13px;
-  color: #cccccc;
+/* RESIZER */
+.resizer {
+  width: 4px;
+  background: #333;
+  cursor: ew-resize;
+}
+
+.resizer:hover {
+  background: #007acc;
+}
+
+/* VIEWER */
+.viewer {
+  flex: 1;
+  position: relative;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* CANVAS */
+#overlay {
+  position: absolute;
+}
+
+/* TIMELINE */
+.timeline {
+  height: 80px;
+  background: #111;
+  border-top: 1px solid #333;
+  position: relative;
+}
+
+.timeline-bar {
+  position: absolute;
+  height: 4px;
+  width: 100%;
+  background: #007acc;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /* BUTTONS */
 button {
   width: 100%;
-  padding: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  padding: 6px;
   background: #0e639c;
   border: none;
   color: white;
-  font-size: 13px;
   cursor: pointer;
-  border-radius: 3px;
-  transition: background 0.2s ease;
 }
 
 button:hover {
   background: #1177bb;
 }
 
-button:active {
-  background: #094771;
-}
-
 /* INPUTS */
-input, select {
+input {
   width: 100%;
-  padding: 6px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  padding: 4px;
   background: #1e1e1e;
   border: 1px solid #555;
   color: white;
-  border-radius: 3px;
 }
 
-/* PLAYER AREA */
-.player {
-  flex: 1;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #000;
-}
-
-/* VIDEO (if used) */
-video {
-  max-width: 100%;
-  max-height: 100%;
-}
-
-/* OVERLAY CANVAS */
-#overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: auto;
-}
-
-/* PREVIEW WINDOW */
+/* PREVIEW */
 #preview {
   width: 100%;
-  height: 140px;
+  height: 120px;
   border: 1px solid #444;
   background: black;
-  margin-top: 10px;
 }
 
-/* PROGRESS BAR */
-#progress {
-  width: 100%;
-  height: 6px;
-  background: #333;
-  margin-top: 10px;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-#bar {
-  width: 0%;
-  height: 100%;
-  background: #4caf50;
-  transition: width 0.3s ease;
-}
-
-/* CONTROL PANEL (MPV CONTROLS) */
-.controls {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.7);
-  padding: 6px 10px;
-  border-radius: 6px;
-  display: flex;
-  gap: 6px;
-}
-
-.controls button {
-  width: auto;
-  padding: 6px 10px;
-  font-size: 12px;
-}
-
-/* SCROLL AREA (for presets/QC later) */
-.scroll {
-  overflow-y: auto;
-  max-height: 200px;
-}
-
-/* TEXT OUTPUT (QC REPORT) */
+/* QC */
 pre {
-  background: #1e1e1e;
-  border: 1px solid #444;
-  padding: 8px;
   font-size: 11px;
-  overflow-x: auto;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-/* HOVER CURSOR STATES (OPTIONAL FUTURE) */
-.canvas-resize-ns {
-  cursor: ns-resize;
-}
-
-.canvas-resize-ew {
-  cursor: ew-resize;
-}
-
-.canvas-resize-diag1 {
-  cursor: nwse-resize;
-}
-
-.canvas-resize-diag2 {
-  cursor: nesw-resize;
+  background: #1e1e1e;
+  padding: 6px;
+  border: 1px solid #444;
 }
