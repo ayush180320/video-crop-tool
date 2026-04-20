@@ -1,54 +1,60 @@
-const fileInput = document.getElementById('fileInput');
 const video = document.getElementById('video');
+const canvas = document.getElementById('overlay');
+const ctx = canvas.getContext('2d');
+
+const openBtn = document.getElementById('openBtn');
 const autoBtn = document.getElementById('autoBtn');
 const exportBtn = document.getElementById('exportBtn');
-const output = document.getElementById('output');
-const controls = document.getElementById('controls');
 
 let filePath = null;
-let crop = null;
 
-fileInput.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  filePath = file.path;   // IMPORTANT for Electron
-  video.src = URL.createObjectURL(file);
-});
+let crop = { x:100, y:100, width:400, height:200 };
+let dragging = false;
 
-autoBtn.addEventListener('click', async () => {
-  if (!filePath) return alert("Select video first");
-  crop = await window.api.detectCrop(filePath);
-  renderControls();
-  renderOutput();
-});
+openBtn.onclick = async () => {
+  filePath = await window.api.openFile();
+  if (!filePath) return;
+  video.src = filePath;
+};
 
-function renderControls() {
-  if (!crop) return;
+video.onloadedmetadata = () => {
+  canvas.width = video.clientWidth;
+  canvas.height = video.clientHeight;
+  draw();
+};
 
-  controls.innerHTML = `
-    Width: <input id="w" value="${crop.width}"><br>
-    Height: <input id="h" value="${crop.height}"><br>
-    X: <input id="x" value="${crop.x}"><br>
-    Y: <input id="y" value="${crop.y}"><br>
-  `;
+autoBtn.onclick = async () => {
+  const result = await window.api.detectCrop(filePath);
+  crop = result;
+  draw();
+};
 
-  ['w','h','x','y'].forEach(id => {
-    document.getElementById(id).addEventListener('input', () => {
-      crop.width = Number(document.getElementById('w').value);
-      crop.height = Number(document.getElementById('h').value);
-      crop.x = Number(document.getElementById('x').value);
-      crop.y = Number(document.getElementById('y').value);
-      renderOutput();
-    });
-  });
+exportBtn.onclick = () => {
+  const str = `crop=${crop.width}:${crop.height}:${crop.x}:${crop.y}`;
+  navigator.clipboard.writeText(str);
+  alert(str);
+};
+
+function draw() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  ctx.strokeStyle="red";
+  ctx.lineWidth=2;
+  ctx.strokeRect(crop.x,crop.y,crop.width,crop.height);
 }
 
-exportBtn.addEventListener('click', () => {
-  if (!crop) return;
+// drag
+canvas.onmousedown = () => dragging = true;
+canvas.onmouseup = () => dragging = false;
+canvas.onmousemove = (e) => {
+  if (!dragging) return;
+  crop.x = e.offsetX - crop.width/2;
+  crop.y = e.offsetY - crop.height/2;
+  draw();
+};
 
-  const ffmpeg = `crop=${crop.width}:${crop.height}:${crop.x}:${crop.y}`;
-  alert(ffmpeg);
+// frame stepping
+document.addEventListener('keydown', (e)=>{
+  if(e.key==="ArrowRight") video.currentTime += 1/30;
+  if(e.key==="ArrowLeft") video.currentTime -= 1/30;
 });
-
-function renderOutput() {
-  output.textContent = JSON.stringify(crop, null, 2);
-}
