@@ -1,10 +1,10 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 
+const { startMPV, pause, frameStep, seek } = require('./backend/mpvController');
 const { detectCrop } = require('./backend/cropDetect');
 const { loadPresets, savePreset, deletePreset } = require('./backend/presets');
 const { generateQC } = require('./backend/qcReport');
-const { startMPV } = require('./backend/mpvController');
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -31,10 +31,14 @@ ipcMain.handle('open-file', async () => {
 });
 
 ipcMain.handle('play-video', (_, f) => startMPV(f));
+ipcMain.handle('mpv-pause', () => pause());
+ipcMain.handle('mpv-frame', () => frameStep());
+ipcMain.handle('mpv-seek', (_, s) => seek(s));
+
 ipcMain.handle('detect-crop', (_, f) => detectCrop(f));
 
 ipcMain.handle('get-presets', () => loadPresets());
 ipcMain.handle('save-preset', (_, n, c) => savePreset(n, c));
 ipcMain.handle('delete-preset', (_, n) => deletePreset(n));
 
-ipcMain.handle('generate-qc', (_, meta, crop) => generateQC(meta, crop));
+ipcMain.handle('generate-qc', (_, m, c) => generateQC(m, c));
