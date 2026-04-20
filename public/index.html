@@ -1,27 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="sidebar">
-<button id="openBtn">Open</button>
-<button id="autoBtn">Auto Detect</button>
-<button id="exportBtn">Export</button>
+<div class="app">
 
-<button id="playBtn">Play/Pause</button>
-<button id="frameBtn">Frame</button>
-<button id="backBtn"><<</button>
-<button id="fwdBtn">>></button>
+  <!-- LEFT PANEL -->
+  <div class="panel left" id="leftPanel">
+    <h3>Media</h3>
+    <button id="openBtn">Open Video</button>
 
-<canvas id="preview"></canvas>
-</div>
+    <h3>Crop Controls</h3>
+    <button id="autoBtn">Auto Detect</button>
+    <button id="exportBtn">Export</button>
 
-<div class="player">
-<canvas id="overlay"></canvas>
+    <h3>Playback</h3>
+    <button id="playBtn">Play/Pause</button>
+    <button id="frameBtn">Frame Step</button>
+    <button id="backBtn"><<</button>
+    <button id="fwdBtn">>></button>
+
+    <h3>Preview</h3>
+    <canvas id="preview"></canvas>
+  </div>
+
+  <!-- RESIZER -->
+  <div class="resizer vertical" id="resizerLeft"></div>
+
+  <!-- CENTER -->
+  <div class="panel center">
+
+    <!-- VIDEO AREA -->
+    <div class="viewer">
+      <canvas id="overlay"></canvas>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="timeline" id="timeline">
+      <div class="timeline-bar"></div>
+    </div>
+
+  </div>
+
+  <!-- RESIZER -->
+  <div class="resizer vertical" id="resizerRight"></div>
+
+  <!-- RIGHT PANEL -->
+  <div class="panel right">
+    <h3>Inspector</h3>
+
+    <label>Top</label>
+    <input id="top">
+
+    <label>Bottom</label>
+    <input id="bottom">
+
+    <label>Left</label>
+    <input id="left">
+
+    <label>Right</label>
+    <input id="right">
+
+    <h3>QC</h3>
+    <button id="qcBtn">Generate QC</button>
+    <pre id="qcOutput"></pre>
+  </div>
+
 </div>
 
 <script src="../src/app.js"></script>
+<script src="../src/ui.js"></script>
+
 </body>
 </html>
