@@ -1,6 +1,5 @@
-const { contextBridge } = require('electron');
-const { detectCrop } = require('./backend/cropDetect');
+const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
-  detectCrop,
+  detectCrop: (filePath) => ipcRenderer.invoke('detect-crop', filePath)
 });
