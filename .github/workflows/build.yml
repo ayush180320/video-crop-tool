@@ -9,31 +9,43 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # 1. Checkout repo
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      # 2. Setup Node
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
+      # 3. Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 🔥 Download mpv automatically
+      # 4. Download mpv (STABLE LINK — FIXED)
       - name: Download mpv
         run: |
-          curl -L -o mpv.7z https://github.com/shinchiro/mpv-winbuild-cmake/releases/latest/download/mpv-x86_64.7z
-          7z x mpv.7z -ompv
+          curl -L -o mpv.zip https://sourceforge.net/projects/mpv-player-windows/files/latest/download
 
-      # 🔥 Move mpv into resources folder
+      # 5. Extract mpv
+      - name: Extract mpv
+        run: |
+          7z x mpv.zip -ompv
+
+      # 6. Move mpv into resources
       - name: Prepare mpv
         run: |
           mkdir resources\mpv
           xcopy mpv\* resources\mpv /E /I
 
+      # 7. Build Electron app
       - name: Build app
         run: npm run build -- --publish=never
 
-      - uses: actions/upload-artifact@v4
+      # 8. Upload .exe
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
           name: VideoCropTool
           path: dist/*.exe
