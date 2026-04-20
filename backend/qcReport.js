@@ -1,18 +1,18 @@
-function generateQC(meta, crop) {
-  const width = meta.width - crop.left - crop.right;
-  const height = meta.height - crop.top - crop.bottom;
+function generateQC(meta,crop){
+  const w=meta.width-crop.left-crop.right;
+  const h=meta.height-crop.top-crop.bottom;
 
   return {
-    output: { width, height },
-    checks: {
-      evenPixels:
+    output:{width:w,height:h},
+    checks:{
+      even:
         crop.top%2===0 &&
         crop.bottom%2===0 &&
         crop.left%2===0 &&
         crop.right%2===0
     },
-    timestamp: new Date().toISOString()
+    time:new Date().toISOString()
   };
 }
 
-module.exports = { generateQC };
+module.exports={generateQC};
