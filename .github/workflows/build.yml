@@ -7,13 +7,32 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - run: npm install
-      - run: npm run build -- --publish=never
+
+      - name: Install dependencies
+        run: npm install
+
+      # 🔥 Download mpv automatically
+      - name: Download mpv
+        run: |
+          curl -L -o mpv.7z https://github.com/shinchiro/mpv-winbuild-cmake/releases/latest/download/mpv-x86_64.7z
+          7z x mpv.7z -ompv
+
+      # 🔥 Move mpv into resources folder
+      - name: Prepare mpv
+        run: |
+          mkdir resources\mpv
+          xcopy mpv\* resources\mpv /E /I
+
+      - name: Build app
+        run: npm run build -- --publish=never
+
       - uses: actions/upload-artifact@v4
         with:
           name: VideoCropTool
