@@ -1,65 +1,26 @@
 {
   "name": "video-crop-tool",
-  "version": "6.0.0",
-  "description": "Studio-grade video crop and QC tool",
-  "author": "Your Name",
+  "version": "7.0.0",
   "main": "main.js",
-
   "scripts": {
     "start": "electron .",
-    "dev": "electron .",
-    "build": "electron-builder --publish=never",
-    "build:win": "electron-builder --win --publish=never"
+    "build": "electron-builder --publish=never"
   },
-
   "build": {
     "appId": "com.videocrop.tool",
     "productName": "Video Crop Tool",
-
-    "directories": {
-      "output": "dist"
-    },
-
-    "files": [
-      "main.js",
-      "preload.js",
-      "backend/**/*",
-      "public/**/*",
-      "src/**/*",
-      "data/**/*",
-      "package.json"
-    ],
-
+    "directories": { "output": "dist" },
+    "files": ["**/*"],
     "extraResources": [
-      {
-        "from": "resources/mpv",
-        "to": "mpv"
-      }
+      { "from": "resources/mpv", "to": "mpv" }
     ],
-
-    "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": ["x64"]
-        }
-      ]
-    },
-
-    "nsis": {
-      "oneClick": true,
-      "perMachine": false,
-      "allowToChangeInstallationDirectory": false
-    },
-
+    "win": { "target": "nsis" },
     "npmRebuild": false
   },
-
   "dependencies": {
     "fluent-ffmpeg": "^2.1.2",
     "ffmpeg-static": "^5.2.0"
   },
-
   "devDependencies": {
     "electron": "^28.3.3",
     "electron-builder": "^24.13.3"
