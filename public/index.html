@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Video Crop Tool</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<h2>Video Crop Tool</h2>
+<div class="container">
 
-<input type="file" id="fileInput" />
-<button id="autoBtn">Auto Detect</button>
-<button id="exportBtn">Export</button>
+  <div class="sidebar">
+    <h3>Controls</h3>
 
-<br><br>
+    <button id="openBtn">Open Video</button>
+    <button id="autoBtn">Auto Detect</button>
 
-<video id="video" controls width="800"></video>
+    <div id="manual"></div>
 
-<div id="controls"></div>
+    <button id="exportBtn">Export</button>
+  </div>
 
-<pre id="output"></pre>
+  <div class="player">
+    <div class="video-wrapper">
+      <video id="video"></video>
+      <canvas id="overlay"></canvas>
+    </div>
+  </div>
+
+</div>
 
 <script src="../src/app.js"></script>
-
 </body>
 </html>
