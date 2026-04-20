@@ -9,41 +9,41 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      # 1. Checkout repo
+      # Checkout repo
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. Setup Node
+      # Setup Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      # 3. Install dependencies
+      # Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 4. Download mpv (STABLE LINK — FIXED)
+      # Download mpv (STABLE SOURCE)
       - name: Download mpv
         run: |
           curl -L -o mpv.zip https://sourceforge.net/projects/mpv-player-windows/files/latest/download
 
-      # 5. Extract mpv
+      # Extract mpv
       - name: Extract mpv
         run: |
           7z x mpv.zip -ompv
 
-      # 6. Move mpv into resources
+      # Move mpv into resources folder
       - name: Prepare mpv
         run: |
           mkdir resources\mpv
           xcopy mpv\* resources\mpv /E /I
 
-      # 7. Build Electron app
+      # Build app (NO publish errors anymore)
       - name: Build app
-        run: npm run build -- --publish=never
+        run: npm run build
 
-      # 8. Upload .exe
+      # Upload installer
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
