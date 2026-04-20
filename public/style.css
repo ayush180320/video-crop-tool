@@ -1,0 +1,44 @@
+body {
+  margin:0;
+  background:#1e1e1e;
+  color:white;
+  font-family:Arial;
+}
+
+.container {
+  display:flex;
+  height:100vh;
+}
+
+.sidebar {
+  width:280px;
+  background:#2b2b2b;
+  padding:15px;
+}
+
+.sidebar button {
+  width:100%;
+  margin-bottom:10px;
+  padding:8px;
+}
+
+.player {
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.video-wrapper {
+  position:relative;
+}
+
+video {
+  max-width:100%;
+}
+
+canvas {
+  position:absolute;
+  top:0;
+  left:0;
+}
