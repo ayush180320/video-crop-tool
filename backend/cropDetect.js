@@ -1,41 +1,45 @@
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('ffmpeg-static');
-
 ffmpeg.setFfmpegPath(ffmpegPath);
 
-function detectCrop(filePath) {
-  return new Promise((resolve, reject) => {
-    let crops = [];
+async function detectCrop(filePath) {
+  const samples = [5, 15, 30, 60];
+  let results = [];
 
-    ffmpeg(filePath)
+  for (let t of samples) {
+    const crop = await runSample(filePath, t);
+    if (crop) results.push(crop);
+  }
+
+  return stabilize(results);
+}
+
+function runSample(file, time) {
+  return new Promise((resolve) => {
+    let found = null;
+
+    ffmpeg(file)
+      .seekInput(time)
+      .frames(50)
       .outputOptions('-vf', 'cropdetect=limit=24:round=2:reset=0')
       .output('-f', 'null')
       .on('stderr', (line) => {
         const m = line.match(/crop=\d+:\d+:\d+:\d+/);
-        if (m) crops.push(m[0]);
+        if (m) found = m[0];
       })
-      .on('end', () => resolve(aggregate(crops)))
-      .on('error', reject)
+      .on('end', () => resolve(found))
       .run();
   });
 }
 
-function aggregate(list) {
-  if (!list.length) return null;
+function stabilize(list) {
+  const freq = {};
+  list.forEach(c => freq[c] = (freq[c] || 0) + 1);
 
-  const parsed = list.map(c => {
-    const [w,h,x,y] = c.replace('crop=','').split(':').map(Number);
-    return {w,h,x,y};
-  });
+  const best = Object.entries(freq).sort((a,b)=>b[1]-a[1])[0][0];
+  const [w,h,x,y] = best.replace('crop=','').split(':').map(Number);
 
-  const median = arr => arr.sort((a,b)=>a-b)[Math.floor(arr.length/2)];
-
-  return {
-    width: median(parsed.map(p=>p.w)),
-    height: median(parsed.map(p=>p.h)),
-    x: median(parsed.map(p=>p.x)),
-    y: median(parsed.map(p=>p.y))
-  };
+  return { width:w, height:h, x, y };
 }
 
 module.exports = { detectCrop };
