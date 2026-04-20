@@ -15,3 +15,9 @@ function createWindow() {
 }
 
 app.whenReady().then(createWindow);
+const { ipcMain } = require('electron');
+const { detectCrop } = require('./backend/cropDetect');
+
+ipcMain.handle('detect-crop', async (event, filePath) => {
+  return await detectCrop(filePath);
+});
