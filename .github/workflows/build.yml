@@ -9,47 +9,59 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # 1. Checkout repo
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      # 2. Setup Node
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - run: npm install
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm install
 
+      # 🔥 4. Download mpv from YOUR GitHub release
       - name: Download mpv
-        shell: powershell
         run: |
-          $url = "https://github.com/shinchiro/mpv-winbuild-cmake/releases/download/2024-04-21/mpv-x86_64-20240421-git.7z"
-          Invoke-WebRequest -Uri $url -OutFile mpv.7z
+          curl -L -o mpv.7z https://github.com/ayush180320/video-crop-tool/releases/latest/download/mpv.7z
 
-          if ((Get-Item mpv.7z).Length -lt 1000000) {
-            Write-Error "mpv download failed"
-            exit 1
-          }
+      # 🔍 5. Verify download (size should be ~20–40MB)
+      - name: Verify mpv download
+        run: |
+          dir mpv.7z
 
+      # 📦 6. Extract mpv
       - name: Extract mpv
         run: |
           7z x mpv.7z -ompv
 
+      # 📁 7. Move into resources folder
       - name: Prepare mpv
         run: |
           mkdir resources
           mkdir resources\mpv
           xcopy mpv\* resources\mpv /E /I
+          dir resources\mpv
 
+      # 🛑 8. Fail if mpv missing
       - name: Verify mpv exists
         shell: powershell
         run: |
           if (!(Test-Path "resources/mpv/mpv.exe")) {
-            Write-Error "mpv missing"
+            Write-Error "mpv.exe missing"
             exit 1
           }
 
+      # 🏗️ 9. Build app
       - name: Build app
         run: npm run build
 
-      - uses: actions/upload-artifact@v4
+      # 📦 10. Upload installer
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
           name: VideoCropTool
           path: dist/*.exe
