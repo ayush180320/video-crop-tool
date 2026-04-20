@@ -17,32 +17,25 @@ jobs:
 
       - run: npm install
 
-      # 🔥 Download mpv (reliable)
+      # ✅ REAL mpv build
       - name: Download mpv
         run: |
-          curl -L -o mpv.zip https://sourceforge.net/projects/mpv-player-windows/files/latest/download
+          curl -L -o mpv.7z https://github.com/shinchiro/mpv-winbuild-cmake/releases/download/2024-04-21/mpv-x86_64-20240421-git.7z
 
-      # 🔥 Extract mpv
       - name: Extract mpv
         run: |
-          7z x mpv.zip -ompv
+          7z x mpv.7z -ompv
 
-      # 🔥 Create resources folder and copy mpv
       - name: Prepare mpv
         run: |
           mkdir resources
           mkdir resources\mpv
           xcopy mpv\* resources\mpv /E /I
 
-      # 🔥 DEBUG (VERY IMPORTANT)
+      # ✅ PowerShell-safe check
       - name: Verify mpv exists
         run: |
-          dir resources\mpv
-
-      # 🔥 FAIL SAFE (prevents broken build)
-      - name: Fail if mpv missing
-        run: |
-          if not exist resources\mpv\mpv.exe exit 1
+          if (!(Test-Path "resources/mpv/mpv.exe")) { exit 1 }
 
       - name: Build app
         run: npm run build
