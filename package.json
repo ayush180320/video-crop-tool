@@ -1,8 +1,9 @@
 {
   "name": "video-crop-tool",
   "version": "6.0.0",
-  "main": "main.js",
+  "description": "Studio-grade video crop tool",
   "author": "Your Name",
+  "main": "main.js",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --publish=never"
@@ -13,10 +14,7 @@
     "directories": { "output": "dist" },
     "files": ["**/*"],
     "extraResources": [
-      {
-        "from": "resources/mpv",
-        "to": "mpv"
-      }
+      { "from": "resources/mpv", "to": "mpv" }
     ],
     "win": { "target": "nsis" },
     "npmRebuild": false
