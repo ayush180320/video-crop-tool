@@ -1,9 +1,8 @@
 {
   "name": "video-crop-tool",
-  "version": "2.0.0",
-  "description": "Professional video crop detection tool",
-  "author": "Your Name",
+  "version": "5.0.0",
   "main": "main.js",
+  "author": "Your Name",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder"
