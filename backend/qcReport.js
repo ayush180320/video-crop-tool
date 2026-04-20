@@ -1,25 +1,15 @@
-function generateQC(videoMeta, crop) {
-  const width = videoMeta.width - crop.left - crop.right;
-  const height = videoMeta.height - crop.top - crop.bottom;
-
-  const aspect = (width / height).toFixed(2);
+function generateQC(meta, crop) {
+  const width = meta.width - crop.left - crop.right;
+  const height = meta.height - crop.top - crop.bottom;
 
   return {
-    original: videoMeta,
-    crop,
-    output: {
-      width,
-      height,
-      aspectRatio: aspect
-    },
+    output: { width, height },
     checks: {
-      evenPixels: [
-        crop.top % 2 === 0,
-        crop.bottom % 2 === 0,
-        crop.left % 2 === 0,
-        crop.right % 2 === 0
-      ].every(Boolean),
-      safeAspect: aspect > 1.7 && aspect < 2.5
+      evenPixels:
+        crop.top%2===0 &&
+        crop.bottom%2===0 &&
+        crop.left%2===0 &&
+        crop.right%2===0
     },
     timestamp: new Date().toISOString()
   };
