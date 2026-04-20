@@ -1,31 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="container">
+<div class="sidebar">
+  <button id="openBtn">Open Video</button>
+  <button id="autoBtn">Auto Detect</button>
 
-  <div class="sidebar">
-    <h3>Controls</h3>
+  <h4>Manual</h4>
+  <input id="top" placeholder="Top">
+  <input id="bottom" placeholder="Bottom">
+  <input id="left" placeholder="Left">
+  <input id="right" placeholder="Right">
 
-    <button id="openBtn">Open Video</button>
-    <button id="autoBtn">Auto Detect</button>
+  <h4>Presets</h4>
+  <select id="presetList"></select>
+  <button id="savePreset">Save</button>
+  <button id="loadPreset">Load</button>
 
-    <div id="manual"></div>
+  <button id="qcBtn">QC</button>
+  <button id="exportBtn">Export</button>
 
-    <button id="exportBtn">Export</button>
-  </div>
-
-  <div class="player">
-    <div class="video-wrapper">
-      <video id="video"></video>
-      <canvas id="overlay"></canvas>
-    </div>
-  </div>
-
+  <div id="progress"><div id="bar"></div></div>
+  <pre id="qcOutput"></pre>
 </div>
 
 <script src="../src/app.js"></script>
