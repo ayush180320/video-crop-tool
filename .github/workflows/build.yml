@@ -2,8 +2,7 @@ name: Build EXE
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
@@ -11,21 +10,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm install
+      - run: npm install
+      - run: npm run build -- --publish=never
 
-      - name: Build app
-        run: npm run build
-
-      - name: Upload EXE
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: VideoCropTool
-          path: |
-            dist/*.exe
-            dist/*.blockmap
+          path: dist/*.exe
