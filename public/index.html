@@ -1,26 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+</head>
 <body>
 
 <div class="container">
 
-  <div class="sidebar">
-    <button id="openBtn">Open Video</button>
-    <button id="autoBtn">Auto Detect</button>
-    <button id="exportBtn">Export</button>
+<div class="sidebar">
+<button id="openBtn">Open</button>
+<button id="autoBtn">Auto</button>
+<button id="exportBtn">Export</button>
+<button id="qcBtn">QC</button>
 
-    <div id="progress"><div id="bar"></div></div>
+<div id="progress"><div id="bar"></div></div>
 
-    <h4>Zoom Preview</h4>
-    <canvas id="preview"></canvas>
-  </div>
+<h4>Preview</h4>
+<canvas id="preview"></canvas>
 
-  <div class="player">
-    <div class="video-wrapper">
-      <video id="video"></video>
-      <canvas id="overlay"></canvas>
-    </div>
-  </div>
+</div>
+
+<div class="player">
+<video id="video"></video>
+<canvas id="overlay"></canvas>
+</div>
 
 </div>
 
 <script src="../src/app.js"></script>
 </body>
+</html>
