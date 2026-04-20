@@ -9,43 +9,45 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      # Checkout repo
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # Setup Node
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      # Install dependencies
-      - name: Install dependencies
-        run: npm install
+      - run: npm install
 
-      # Download mpv (STABLE SOURCE)
+      # 🔥 Download mpv (reliable)
       - name: Download mpv
         run: |
           curl -L -o mpv.zip https://sourceforge.net/projects/mpv-player-windows/files/latest/download
 
-      # Extract mpv
+      # 🔥 Extract mpv
       - name: Extract mpv
         run: |
           7z x mpv.zip -ompv
 
-      # Move mpv into resources folder
+      # 🔥 Create resources folder and copy mpv
       - name: Prepare mpv
         run: |
+          mkdir resources
           mkdir resources\mpv
           xcopy mpv\* resources\mpv /E /I
 
-      # Build app (NO publish errors anymore)
+      # 🔥 DEBUG (VERY IMPORTANT)
+      - name: Verify mpv exists
+        run: |
+          dir resources\mpv
+
+      # 🔥 FAIL SAFE (prevents broken build)
+      - name: Fail if mpv missing
+        run: |
+          if not exist resources\mpv\mpv.exe exit 1
+
       - name: Build app
         run: npm run build
 
-      # Upload installer
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: VideoCropTool
           path: dist/*.exe
