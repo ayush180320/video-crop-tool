@@ -1,23 +1,21 @@
-// shortened header for clarity
-const canvas=document.getElementById("overlay");
-const ctx=canvas.getContext("2d");
-const video=document.getElementById("video");
-const preview=document.getElementById("preview");
-const pctx=preview.getContext("2d");
+const canvas = document.getElementById("overlay");
+const ctx = canvas.getContext("2d");
 
-let crop={top:100,bottom:100,left:100,right:100};
+const preview = document.getElementById("preview");
+const pctx = preview.getContext("2d");
 
-function snap(v){return Math.round(v/2)*2;}
+let crop = { top:100, bottom:100, left:100, right:100 };
+let filePath = null;
 
-video.onloadedmetadata=()=>{
-  canvas.width=video.clientWidth;
-  canvas.height=video.clientHeight;
-  draw();
-};
+function snap(v){ return Math.round(v/2)*2; }
 
-// DRAW + PREVIEW
+canvas.width = 800;
+canvas.height = 450;
+
 function draw(){
-  const w=canvas.width,h=canvas.height;
+  const w = canvas.width;
+  const h = canvas.height;
+
   ctx.clearRect(0,0,w,h);
 
   ctx.fillStyle="rgba(0,0,0,0.6)";
@@ -28,23 +26,35 @@ function draw(){
 
   ctx.strokeStyle="#00ffcc";
   ctx.strokeRect(crop.left,crop.top,w-crop.left-crop.right,h-crop.top-crop.bottom);
-
-  // preview
-  pctx.clearRect(0,0,preview.width,preview.height);
-  pctx.drawImage(video,crop.left,crop.top,
-    video.videoWidth-crop.left-crop.right,
-    video.videoHeight-crop.top-crop.bottom,
-    0,0,preview.width,preview.height);
 }
 
-// KEYBOARD NUDGE
-document.addEventListener("keydown",(e)=>{
-  const step=e.shiftKey?2:1;
+draw();
 
-  if(e.key==="ArrowUp") crop.top=snap(crop.top-step);
-  if(e.key==="ArrowDown") crop.bottom=snap(crop.bottom-step);
-  if(e.key==="ArrowLeft") crop.left=snap(crop.left-step);
-  if(e.key==="ArrowRight") crop.right=snap(crop.right-step);
+// keyboard nudging
+document.addEventListener("keydown",(e)=>{
+  const step = e.shiftKey ? 2 : 1;
+
+  if(e.key==="ArrowUp") crop.top = snap(crop.top-step);
+  if(e.key==="ArrowDown") crop.bottom = snap(crop.bottom-step);
+  if(e.key==="ArrowLeft") crop.left = snap(crop.left-step);
+  if(e.key==="ArrowRight") crop.right = snap(crop.right-step);
 
   draw();
 });
+
+// controls
+openBtn.onclick = async ()=>{
+  filePath = await window.api.openFile();
+  window.api.playVideo(filePath);
+};
+
+playBtn.onclick = ()=> window.api.pause();
+frameBtn.onclick = ()=> window.api.frameStep();
+backBtn.onclick = ()=> window.api.seek(-1);
+fwdBtn.onclick = ()=> window.api.seek(1);
+
+exportBtn.onclick = ()=>{
+  const w = 1920 - crop.left - crop.right;
+  const h = 1080 - crop.top - crop.bottom;
+  alert(`crop=${w}:${h}:${crop.left}:${crop.top}`);
+};
