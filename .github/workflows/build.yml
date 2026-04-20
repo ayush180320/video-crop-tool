@@ -17,10 +17,16 @@ jobs:
 
       - run: npm install
 
-      # ✅ REAL mpv build
       - name: Download mpv
+        shell: powershell
         run: |
-          curl -L -o mpv.7z https://github.com/shinchiro/mpv-winbuild-cmake/releases/download/2024-04-21/mpv-x86_64-20240421-git.7z
+          $url = "https://github.com/shinchiro/mpv-winbuild-cmake/releases/download/2024-04-21/mpv-x86_64-20240421-git.7z"
+          Invoke-WebRequest -Uri $url -OutFile mpv.7z
+
+          if ((Get-Item mpv.7z).Length -lt 1000000) {
+            Write-Error "mpv download failed"
+            exit 1
+          }
 
       - name: Extract mpv
         run: |
@@ -32,10 +38,13 @@ jobs:
           mkdir resources\mpv
           xcopy mpv\* resources\mpv /E /I
 
-      # ✅ PowerShell-safe check
       - name: Verify mpv exists
+        shell: powershell
         run: |
-          if (!(Test-Path "resources/mpv/mpv.exe")) { exit 1 }
+          if (!(Test-Path "resources/mpv/mpv.exe")) {
+            Write-Error "mpv missing"
+            exit 1
+          }
 
       - name: Build app
         run: npm run build
